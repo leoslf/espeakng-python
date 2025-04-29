@@ -32,10 +32,10 @@ class Speaker:
     Speaker class for differentiating different speech properties.
     """
 
-    def __init__(self, voice="en", **kwargs):
+    def __init__(self, **kwargs):
         self.prevproc = None
         Speaker.validate_parameters(kwargs)
-        self.voice = voice
+        self.voice = kwargs.get("voice", "en")
         self.wpm = kwargs.get("wpm", 175)  # 80-500 (175)
         self.pitch = kwargs.get("pitch", 50)  # 0-99  (50)
         self.amplitude = kwargs.get("amplitude", 100)  # 0-200 (100)
