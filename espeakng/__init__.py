@@ -103,7 +103,6 @@ class Speaker:
             self.prevproc = subprocess.Popen(cmd,
                                              cwd=os.path.dirname(
                                                  os.path.abspath(__file__)))
-        print(cmd)
 
     def is_talking(self):
         if self.prevproc and self.prevproc.poll() == None:
