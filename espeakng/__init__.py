@@ -64,7 +64,7 @@ class Speaker:
     def list_voices():
         return ["af","sq","am","ar","an","hy","hyw","as","az","ba","cu","eu","be","bn","bpy","bs","bg","my","ca","chr","yue","hak","haw","cmn","hr","cs","da","nl","en-us","en","en-029","en-gb-x-gbclan","en-gb-x-rp","en-gb-scotland","en-gb-x-gbcwmd","eo","et","fa","fa-latn","fi","fr-be","fr","fr-ch","ga","gd","ka","de","grc","el","kl","gn","gu","ht","he","hi","hu","is","id","ia","io","it","ja","kn","kok","ko","ku","kk","ky","la","lb","ltg","lv","lfn","lt","jbo","mi","mk","ms","ml","mt","mr","nci","ne","nb","nog","or","om","pap","py","pl","pt-br","qdb","qu","quc","qya","pt","pa","piqd","ro","ru","ru-lv","uk","sjn","sr","tn","sd","shn","si","sk","sl","smj","es","es-419","sw","sv","ta","th","tk","tt","te","tr","ug","ur","uz","vi-vn-x-central","vi","vi-vn-x-south","cy"]
 
-    def generate_command(self, phrase, export_path="", **kwargs):
+    def generate_command(self, phrase, export_path="", ipa=False, ipa_sbr=False, **kwargs):
         Speaker.validate_parameters(kwargs)
         cmd = [
             self.executable,
@@ -81,6 +81,10 @@ class Speaker:
         ]
         if export_path:
             cmd += ['-w', os.path.join(os.getcwd(), export_path)]
+        if ipa:
+            cmd += ['--ipa']
+            if ipa_sbr:
+                cmd += ['--ipa-sbr']
         cmd.append(phrase)
         cmd = [str(x) for x in cmd]
         return cmd
@@ -98,11 +102,15 @@ class Speaker:
             self.prevproc = subprocess.Popen(cmd,
                                              cwd=os.path.dirname(
                                                  os.path.abspath(__file__)),
-                                             startupinfo=si)
+                                             startupinfo=si,
+                                             stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE)
         else:
             self.prevproc = subprocess.Popen(cmd,
                                              cwd=os.path.dirname(
-                                                 os.path.abspath(__file__)))
+                                                 os.path.abspath(__file__)),
+                                             stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE)
 
     def is_talking(self):
         if self.prevproc and self.prevproc.poll() == None:
